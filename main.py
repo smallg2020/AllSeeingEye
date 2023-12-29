@@ -25,7 +25,7 @@ def main():
         if extra_prompt == "":
             with_prompt = base_prompt
         else:
-            with_prompt = base_prompt
+            with_prompt = extra_prompt
         with st.spinner('Wait for it... generating response'):
             if os.path.exists("response.mp3"):
                 os.remove("response.mp3")

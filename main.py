@@ -33,7 +33,7 @@ def main():
         if base64_image:
             image = Image.open(uploaded_file)
             st.image(image, caption='Uploaded Image.', width=256)
-            with_prompt = "describe the image as if i was blind"
+            with_prompt = "describe the image as if i was blind, be brief but point out important objects"
             with st.spinner('Wait for it... generating response'):
                 if os.path.exists("response.mp3"):
                     os.remove("response.mp3")
@@ -54,7 +54,7 @@ def main():
                                 ],
                             }
                         ],
-                        max_tokens=50,
+                        max_tokens=100,
                     )
 
                     st.text("AI Response:")

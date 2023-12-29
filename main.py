@@ -7,6 +7,7 @@ import json
 import base64
 import speech_recognition as sr
 import io
+from st_audiorec import st_audiorec
 
 def main():
     def load_api_key():
@@ -71,34 +72,20 @@ def main():
     openai.api_key = load_api_key()
     client = openai.OpenAI(api_key=openai.api_key)
 
-    st.markdown("""
-            <button onclick="startRecording(this)">Record</button>
-            <script>
-            // JavaScript code to handle voice recording...
-            function startRecording(button) {
-                // Code to start recording...
-                // Once recording is done, convert audio to base64 and set it to a hidden text input in Streamlit
-                document.getElementById('audio_data').value = base64AudioData;
-            }
-            </script>
-        """, unsafe_allow_html=True)
+    wav_audio_data = st_audiorec()
 
-    # Hidden text input to receive base64 encoded audio data
-    audio_data = st.text_input("Audio Data", "")
-    audio_text = ""
-    if audio_data:
-        # Decode the base64 audio data
-        audio_bytes = base64.b64decode(audio_data)
-        audio_stream = io.BytesIO(audio_bytes)
+    if wav_audio_data is not None:
+        st.audio(wav_audio_data, format='audio/wav')
+        audio_text = ""
 
         # Use SpeechRecognition to convert audio to text
         r = sr.Recognizer()
-
+        audio_stream = io.BytesIO(wav_audio_data)
         with sr.AudioFile(audio_stream) as source:
             audio_recorded = r.record(source)
             try:
                 audio_text = r.recognize_google(audio_recorded)
-                #st.write("Transcribed Text:", audio_text)
+                st.write("Transcribed Text:", audio_text)
             except sr.UnknownValueError:
                 st.error("Could not understand audio")
             except sr.RequestError as e:

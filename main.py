@@ -5,8 +5,7 @@ import os
 from gtts import gTTS
 import json
 import base64
-import speech_recognition as sr
-import io
+
 
 def main():
     def load_api_key():
@@ -23,7 +22,10 @@ def main():
 
     def process_image():
         base_prompt = "describe the image as if i was blind, be brief but point out important objects"
-        with_prompt = base_prompt + ", " + extra_prompt
+        if extra_prompt == "":
+            with_prompt = base_prompt
+        else:
+            with_prompt = base_prompt
         with st.spinner('Wait for it... generating response'):
             if os.path.exists("response.mp3"):
                 os.remove("response.mp3")

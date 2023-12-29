@@ -23,7 +23,7 @@ def main():
 
     def process_image():
         base_prompt = "describe the image as if i was blind, be brief but point out important objects"
-        with_prompt = base_prompt + ", " + audio_text
+        with_prompt = base_prompt + ", " + extra_prompt
         with st.spinner('Wait for it... generating response'):
             if os.path.exists("response.mp3"):
                 os.remove("response.mp3")
@@ -65,30 +65,13 @@ def main():
 
     st.title("All Seeing Eye")
 
-    uploaded_audio = st.file_uploader("Choose audio...", type=["wav", "mp3"])
+    extra_prompt = st.text_input(label="extra input", value="")
 
     # File uploader widget
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
     openai.api_key = load_api_key()
     client = openai.OpenAI(api_key=openai.api_key)
-
-    if uploaded_audio is not None:
-        st.audio(uploaded_audio, format=('audio/wav', 'audio/mp3'))
-        audio_text = ""
-
-        # Use SpeechRecognition to convert audio to text
-        r = sr.Recognizer()
-        audio_stream = io.BytesIO(uploaded_audio)
-        with sr.AudioFile(audio_stream) as source:
-            audio_recorded = r.record(source)
-            try:
-                audio_text = r.recognize_google(audio_recorded)
-                st.write("Transcribed Text:", audio_text)
-            except sr.UnknownValueError:
-                st.error("Could not understand audio")
-            except sr.RequestError as e:
-                st.error(f"Error from Speech Recognition service; {e}")
 
     if uploaded_file is not None:
         base64_image = encode_image(uploaded_file)

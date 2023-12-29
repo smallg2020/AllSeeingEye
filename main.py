@@ -31,10 +31,10 @@ def main():
         base64_image = encode_image(uploaded_file)
 
         if base64_image:
-            image = Image.open(uploaded_file)
-            st.image(image, caption='Uploaded Image.', width=256)
             with_prompt = "describe the image as if i was blind, be brief but point out important objects"
             with st.spinner('Wait for it... generating response'):
+                image = Image.open(uploaded_file)
+                st.image(image, caption='Uploaded Image.', width=256)
                 if os.path.exists("response.mp3"):
                     os.remove("response.mp3")
                 try:

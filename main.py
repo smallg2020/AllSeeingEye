@@ -74,7 +74,7 @@ def main():
     client = openai.OpenAI(api_key=openai.api_key)
 
     if uploaded_audio is not None:
-        st.audio(uploaded_audio, format=('audio/wav', 'audio/mp3}'))
+        st.audio(uploaded_audio, format=('audio/wav', 'audio/mp3'))
         audio_text = ""
 
         # Use SpeechRecognition to convert audio to text

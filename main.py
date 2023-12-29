@@ -33,8 +33,6 @@ def main():
         if base64_image:
             with_prompt = "describe the image as if i was blind, be brief but point out important objects"
             with st.spinner('Wait for it... generating response'):
-                image = Image.open(uploaded_file)
-                st.image(image, caption='Uploaded Image.', width=256)
                 if os.path.exists("response.mp3"):
                     os.remove("response.mp3")
                 try:
@@ -60,7 +58,6 @@ def main():
                     st.text("AI Response:")
                     # Correctly extracting the response text
                     response_text = response.choices[0].message.content
-                    st.write(response_text)
 
                     tts = gTTS(text=response_text, lang='en')
                     tts_file = 'response.mp3'
@@ -69,8 +66,13 @@ def main():
                     audio_bytes = audio_file.read()
                     st.audio(audio_bytes, format='audio/mp3', start_time=0)
 
+                    st.write(response_text)
+
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
+
+                image = Image.open(uploaded_file)
+                st.image(image, caption='Uploaded Image.', width=256)
 
 if __name__ == "__main__":
     main()

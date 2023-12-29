@@ -7,7 +7,6 @@ import json
 import base64
 import speech_recognition as sr
 import io
-from st_audiorec import st_audiorec
 
 def main():
     def load_api_key():
@@ -64,7 +63,9 @@ def main():
             except Exception as e:
                 st.error(f"An error occurred: {e}")
 
-    st.title("Image Upload and Analysis")
+    st.title("All Seeing Eye")
+
+    uploaded_audio = st.file_uploader("Choose audio...", type=["wav", "mp3"])
 
     # File uploader widget
     uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
@@ -72,15 +73,13 @@ def main():
     openai.api_key = load_api_key()
     client = openai.OpenAI(api_key=openai.api_key)
 
-    wav_audio_data = st_audiorec()
-
-    if wav_audio_data is not None:
-        st.audio(wav_audio_data, format='audio/wav')
+    if uploaded_audio is not None:
+        st.audio(uploaded_audio, format=('audio/wav', 'audio/mp3}'))
         audio_text = ""
 
         # Use SpeechRecognition to convert audio to text
         r = sr.Recognizer()
-        audio_stream = io.BytesIO(wav_audio_data)
+        audio_stream = io.BytesIO(uploaded_audio)
         with sr.AudioFile(audio_stream) as source:
             audio_recorded = r.record(source)
             try:
